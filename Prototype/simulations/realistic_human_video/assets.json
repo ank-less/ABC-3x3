@@ -1,0 +1,34 @@
+{
+  "renderer": {
+    "executable": null,
+    "blend_scene": null,
+    "required_engine": "BLENDER_EEVEE_NEXT"
+  },
+  "court": {
+    "asset": null,
+    "width_m": 15.05,
+    "length_m": 11.05,
+    "coordinate_origin": "corner court_x=0, court_y=0"
+  },
+  "players": {
+    "asset_library": null,
+    "required_count": 6,
+    "rigged": true,
+    "realistic_skin_and_clothing": true,
+    "front_and_back_jersey_numbers": true,
+    "jersey_textures_by_identity": null
+  },
+  "motions": {
+    "asset_library": null,
+    "required_actions": ["idle", "run", "cut", "dribble", "jump", "shot"]
+  },
+  "props": {
+    "basketball_asset": null,
+    "hoop_asset": null
+  },
+  "provenance": {
+    "asset_sources": [],
+    "licenses_checked": false,
+    "notes": "Record source, license, and redistribution limits for every avatar, texture, motion clip, and prop."
+  }
+}

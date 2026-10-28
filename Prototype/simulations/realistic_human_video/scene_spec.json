@@ -1,0 +1,52 @@
+{
+  "source": {
+    "video_id": "IMG_0104",
+    "start_frame": 1,
+    "frame_count": 300,
+    "identities_from_training_roster": true,
+    "root_motion_from_training_court_positions": true
+  },
+  "scene": {
+    "fps": 30,
+    "resolution": [1280, 720],
+    "court_width_m": 15.05,
+    "court_length_m": 11.05,
+    "random_seed": 20261028,
+    "lighting": "outdoor_daylight_soft_shadow",
+    "background_style": "realistic_outdoor_basketball_court"
+  },
+  "animation": {
+    "root_heading": "smoothed_velocity",
+    "action_selection": "speed_and_context_rules",
+    "ball_contact_required_for_dribble_or_shot": true,
+    "allow_manual_keyframe_override": true
+  },
+  "cameras": [
+    {
+      "id": "high_sideline",
+      "position_m": [-4.0, 5.5, 7.0],
+      "look_at_m": [7.5, 5.5, 0.0],
+      "lens_mm": 50,
+      "difficulty": "normal"
+    },
+    {
+      "id": "low_sideline",
+      "position_m": [-7.0, 5.5, 2.2],
+      "look_at_m": [7.5, 5.5, 0.0],
+      "lens_mm": 35,
+      "difficulty": "hard_low_angle"
+    },
+    {
+      "id": "baseline_oblique",
+      "position_m": [7.5, -6.5, 1.8],
+      "look_at_m": [7.5, 5.5, 0.0],
+      "lens_mm": 32,
+      "difficulty": "hard_occlusion"
+    }
+  ],
+  "outputs": {
+    "video_format": "mp4_h264",
+    "annotations": ["frame", "camera", "player_id", "team_id", "jersey_number", "bbox_xyxy", "foot_x_cm", "foot_y_cm", "visible_fraction"],
+    "competition_ground_truth_format": "frame,court_x,court_y,team_id,jersey_number"
+  }
+}

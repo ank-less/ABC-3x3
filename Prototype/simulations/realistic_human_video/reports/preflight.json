@@ -1,0 +1,66 @@
+{
+  "created_at_utc": "2026-10-28T13:19:11.362726+00:00",
+  "status": "blocked_on_prerequisites",
+  "agent_model": {
+    "id": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "purpose": "scene planning, motion planning, Blender scripting, and visual QA",
+    "renders_video_pixels": false
+  },
+  "source_video_id": "IMG_0104",
+  "source_purpose": "synthetic_training",
+  "source_video_paths": [],
+  "frame_count": 300,
+  "issues": [
+    {
+      "kind": "data",
+      "item": "IMG_0104",
+      "message": "Training source video was not found under Data/Training."
+    },
+    {
+      "kind": "renderer",
+      "item": "Blender",
+      "message": "Blender is not installed or configured."
+    },
+    {
+      "kind": "asset",
+      "item": "court scene",
+      "message": "Path is unset or the file does not exist."
+    },
+    {
+      "kind": "asset",
+      "item": "3D court",
+      "message": "Path is unset or the file does not exist."
+    },
+    {
+      "kind": "asset",
+      "item": "rigged player library",
+      "message": "Path is unset or the file does not exist."
+    },
+    {
+      "kind": "asset",
+      "item": "front/back jersey textures",
+      "message": "Path is unset or the file does not exist."
+    },
+    {
+      "kind": "asset",
+      "item": "basketball motion library",
+      "message": "Path is unset or the file does not exist."
+    },
+    {
+      "kind": "asset",
+      "item": "basketball prop",
+      "message": "Path is unset or the file does not exist."
+    },
+    {
+      "kind": "asset",
+      "item": "hoop prop",
+      "message": "Path is unset or the file does not exist."
+    },
+    {
+      "kind": "rights",
+      "item": "asset licenses",
+      "message": "Record sources and confirm usage/redistribution rights."
+    }
+  ]
+}

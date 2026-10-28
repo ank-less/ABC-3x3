@@ -1,0 +1,94 @@
+{
+  "name": "trackid3x3-realistic-human-video",
+  "version": "0.1.0",
+  "language": "vi",
+  "agent_model": {
+    "id": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "purpose": "scene planning, motion planning, Blender scripting, and visual QA",
+    "renders_video_pixels": false
+  },
+  "renderer": {
+    "backend": "blender",
+    "engine": "BLENDER_EEVEE_NEXT",
+    "video_generation_connector": null,
+    "resolution": [1280, 720],
+    "fps": 30,
+    "draft_seconds": 3,
+    "final_seconds": 10
+  },
+  "data_policy": {
+    "allowed_training_video_ids": ["IMG_0104", "IMG_0105", "IMG_0106", "IMG_0107", "IMG_0110", "IMG_0111"],
+    "real_validation_video_ids": ["IMG_0108", "IMG_0109"],
+    "forbidden_challenge_video_ids": ["IMG_0114", "IMG_0115"],
+    "rule": "Synthetic training examples may use Training clips only. Never use Challenge video frames or labels for asset fitting, training, prompt tuning, or synthetic generation."
+  },
+  "inputs": {
+    "assets_manifest": "assets.json",
+    "scene_spec": "scene_spec.json",
+    "training_root": "../../../Data/Training"
+  },
+  "state_machine": [
+    "preflight",
+    "scene_plan",
+    "asset_manifest",
+    "motion_plan",
+    "scene_and_camera_plan",
+    "draft_render",
+    "visual_qa",
+    "repair_or_accept",
+    "final_render",
+    "synthetic_annotations",
+    "tracking_evaluation",
+    "report"
+  ],
+  "retry_limits": {
+    "visual_qa_repair_passes": 2,
+    "renderer_retries": 1
+  },
+  "agents": [
+    {
+      "id": "director",
+      "model": "gpt-6.1-sol",
+      "prompt": "agents/director.md",
+      "output": "reports/scene_plan.json"
+    },
+    {
+      "id": "asset_curator",
+      "model": "gpt-6.1-sol",
+      "prompt": "agents/asset_curator.md",
+      "output": "reports/asset_manifest.json"
+    },
+    {
+      "id": "motion_planner",
+      "model": "gpt-6.1-sol",
+      "prompt": "agents/motion_planner.md",
+      "output": "reports/motion_plan.json"
+    },
+    {
+      "id": "camera_scene_planner",
+      "model": "gpt-6.1-sol",
+      "prompt": "agents/camera_scene_planner.md",
+      "output": "reports/camera_plan.json"
+    },
+    {
+      "id": "visual_qa",
+      "model": "gpt-6.1-sol",
+      "prompt": "agents/visual_qa.md",
+      "output": "reports/qa.json"
+    }
+  ],
+  "deterministic_workers": [
+    {"id": "blender_renderer", "command": "blender -b <scene.blend> --python <render_script.py>"},
+    {"id": "annotation_exporter", "outputs": ["visible_masks", "2d_boxes", "feet_xy_cm", "identity", "visibility"]},
+    {"id": "pipeline_evaluator", "command": "run the existing detector/tracker/identity pipeline and TI-HOTA evaluator"}
+  ],
+  "quality_gates": {
+    "stable_identity_ids": true,
+    "court_foot_projection_error_cm_max": 2.0,
+    "min_visible_player_fraction": 0.6,
+    "max_missing_or_invalid_frames": 0,
+    "human_review_required_for_first_preview": true,
+    "report_visual_physics_and_tracking_metrics_separately": true
+  }
+}
