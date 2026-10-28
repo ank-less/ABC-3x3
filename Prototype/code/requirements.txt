@@ -1,0 +1,9 @@
+# Python 3.13, CUDA GPU (tested: RTX 4050 Laptop 6 GB for inference, Colab L4 for detector training)
+ultralytics==8.4.190
+torch==2.14.1
+torchvision==0.29.1
+opencv-python==5.0.0.93
+numpy==2.5.4
+scipy==1.18.1
+lap==0.5.13
+imageio-ffmpeg==0.6.0
