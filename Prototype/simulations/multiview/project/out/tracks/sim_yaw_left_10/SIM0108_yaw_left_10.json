@@ -1,0 +1,1 @@
+{"video": "SIM0108_yaw_left_10", "frames": 600, "size": [1280, 720], "weights": "/Users/duyanh/nam 2/ABC 3x3/Prototype/simulations/multiview/project/weights/yolo11l_r3.pt", "imgsz": 1280, "conf": 0.1, "shrink": 1.0, "tracker": "botsort_3x3.yaml", "augment": false, "device": "mps"}

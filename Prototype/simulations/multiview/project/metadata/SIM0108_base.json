@@ -1,0 +1,31 @@
+{
+  "video": "SIM0108_base",
+  "profile": "base",
+  "yaw_deg": 0,
+  "pitch_deg": 0,
+  "roll_deg": 0,
+  "translation_m": [
+    0.0,
+    0.0
+  ],
+  "distance_m": 18.0,
+  "frames": 600,
+  "fps": 29.97002997002997,
+  "warp": [
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ]
+}
