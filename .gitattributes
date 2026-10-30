@@ -1,2 +1,5 @@
 *.pt filter=lfs diff=lfs merge=lfs -text
 Prototype/drive-download-20261028T123620Z-1-001.zip filter=lfs diff=lfs merge=lfs -text
+# Keep the submitted code byte-identical on every OS (no line-ending conversion), so the prediction
+# files keep their SHA-256 and the organizer CSVs keep their CRLF.
+Prototype/code/** -text
