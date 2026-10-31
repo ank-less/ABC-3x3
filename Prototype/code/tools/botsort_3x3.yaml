@@ -1,10 +1,10 @@
-# BoT-SORT for 3x3 games: same thresholds and 3 s buffer as bytetrack_3x3.yaml; the camera is fixed,
-# so no global motion compensation. No ReID (see botsort_reid_3x3.yaml).
+# BoT-SORT for 3x3 games: retain lost tracks for 1 s to limit stale image-space Kalman associations.
+# The camera is fixed, so no global motion compensation. No ReID (see botsort_reid_3x3.yaml).
 tracker_type: botsort
 track_high_thresh: 0.25
 track_low_thresh: 0.1
 new_track_thresh: 0.25
-track_buffer: 90
+track_buffer: 30
 match_thresh: 0.8
 fuse_score: True
 gmc_method: none

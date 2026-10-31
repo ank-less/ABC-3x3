@@ -33,8 +33,18 @@ def video_path(split, video):
     return next(os.path.join(folder, f) for f in os.listdir(folder) if f.startswith(video + "."))
 
 
+def shrink_scales(s):
+    """Return the realized x/y scales after resize dimensions are rounded to integer pixels."""
+    if s <= 0:
+        raise ValueError("shrink scale must be positive")
+    if s >= 1:
+        return 1.0, 1.0
+    return max(1, round(OUT_W * s)) / OUT_W, max(1, round(OUT_H * s)) / OUT_H
+
+
 def shrink_frame(img, s):
-    small = cv2.resize(img, (round(OUT_W * s), round(OUT_H * s)), interpolation=cv2.INTER_AREA)
+    sx, sy = shrink_scales(s)
+    small = cv2.resize(img, (round(OUT_W * sx), round(OUT_H * sy)), interpolation=cv2.INTER_AREA)
     canvas = np.full_like(img, 114)
     canvas[:small.shape[0], :small.shape[1]] = small
     return canvas
@@ -50,7 +60,7 @@ def frames(path, maxsize=64, shrink=1.0):
             ok, img = cap.read()
             if not ok:
                 break
-            if img.shape[1] != OUT_W:
+            if img.shape[1] != OUT_W or img.shape[0] != OUT_H:
                 img = cv2.resize(img, (OUT_W, OUT_H), interpolation=cv2.INTER_AREA)
             q.put(shrink_frame(img, shrink) if shrink < 1 else img)
         q.put(None)
@@ -63,6 +73,8 @@ def frames(path, maxsize=64, shrink=1.0):
 def track_video(model, path, out_txt, imgsz, conf, classes, shrink=1.0, tracker=TRACKER_CFG, augment=False, throttle=1.0):
     n = 0
     t0 = time.time()
+    sx, sy = shrink_scales(shrink)
+    unshrink = np.array([1 / sx, 1 / sy, 1 / sx, 1 / sy], np.float32)
     with open(out_txt, "w") as f:
         for n, img in enumerate(frames(path, shrink=shrink), 1):
             t1 = time.time()
@@ -71,7 +83,8 @@ def track_video(model, path, out_txt, imgsz, conf, classes, shrink=1.0, tracker=
             time.sleep(throttle * (time.time() - t1))  # idle so the GPU stays under ~60% (machine stays usable)
             if r.boxes.id is None:
                 continue
-            for (x1, y1, x2, y2), tid, c in zip((r.boxes.xyxy / shrink).tolist(), r.boxes.id.int().tolist(), r.boxes.conf.tolist()):
+            xyxy = r.boxes.xyxy.cpu().numpy() * unshrink
+            for (x1, y1, x2, y2), tid, c in zip(xyxy.tolist(), r.boxes.id.int().tolist(), r.boxes.conf.tolist()):
                 f.write(f"{n},{tid},{x1:.1f},{y1:.1f},{x2 - x1:.1f},{y2 - y1:.1f},{c:.3f}\n")
             if n % 1000 == 0:
                 print(f"  {n} frames, {n / (time.time() - t0):.1f} fps", flush=True)

@@ -4,8 +4,9 @@ For every frame of the Challenge videos, this code outputs the court position (c
 (team A/B and jersey number) of each of the six players:
 `frame_id,court_x,court_y,team_id,jersey_number`, one file per video, no header.
 
-On the held-out Training videos IMG_0108 + IMG_0109, re-encoded to look like the Challenge videos,
-the method scores **TI-HOTA 0.9680** (tau = 100 cm). The model was never trained on these two videos.
+The previous pipeline version scored **TI-HOTA 0.9680** (tau = 100 cm) on held-out Training videos
+IMG_0108 + IMG_0109 re-encoded to look like the Challenge videos. The robustness changes described
+below have not been rescored; the model was never trained on these two videos.
 
 ## Method in one picture
 
@@ -14,11 +15,12 @@ Challenge video (1280x720)
   │ 1. tools/track.py      YOLO11l player detector (fine-tuned, 3 rounds) + BoT-SORT tracker
   │ 2. tools/pipeline.py   ResNet18 identity classifier on every box: 12 (bib colour, number) + "other"
   │                        → keep the video's 6 roster identities
-  │                        → average the probabilities along each tracklet (31 frames)
+  │                        → average probabilities in a centered 31-frame window; reset after gaps > 3 frames
   │                        → per-frame Hungarian assignment of boxes to the 6 identities
   │                        → court position = homography(bottom-centre of the box)
-  │                        → drop outliers (60 cm from a 15-point running median; short stretches
-  │                          reachable only by > 12 m/s jumps), linear interpolation
+  │                        → uncertainty-aware projection (local homography Jacobian) and a 15-frame median
+  │                        → drop physically impossible short segments; interpolate gaps ≤ 30 frames
+  │                          and use the nearest observed endpoint across longer gaps
   ▼                        → exactly 6 rows per frame, frames 1..N
 predictions/IMG_0114.txt, predictions/IMG_0115.txt
 ```
